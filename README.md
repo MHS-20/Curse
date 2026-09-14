@@ -7,6 +7,8 @@ and lowers burnout rate by 50%.
 
 `curse` draws a curse word as big ASCII art that dances in place, changing color on every frame.
 
+![curse "dio paguro" running in a terminal](docs/screenshot.png)
+
 ## Usage
 
 ```sh
