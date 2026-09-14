@@ -14,6 +14,7 @@ and lowers burnout rate by 50%.
 ```sh
 curse               # pick a random curse from the built-in list
 curse "dio paguro"  # draw your own
+echo damn | curse   # or pipe it in
 ```
 
 Press `Ctrl+C` to stop.

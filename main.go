@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"math"
 	"math/rand"
 	"os"
@@ -100,6 +101,10 @@ func frame(lines []string, f int) string {
 
 func main() {
 	word := strings.Join(os.Args[1:], " ")
+	if st, err := os.Stdin.Stat(); word == "" && err == nil && st.Mode()&os.ModeCharDevice == 0 {
+		in, _ := io.ReadAll(os.Stdin)
+		word = strings.Join(strings.Fields(string(in)), " ")
+	}
 	if word == "" {
 		word = curses[rand.Intn(len(curses))]
 	}
