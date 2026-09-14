@@ -39,14 +39,42 @@ const (
 )
 
 func render(word string) []string {
-	lines := make([]string, glyphRows)
+	mask := make([]string, glyphRows)
 	for _, r := range strings.ToUpper(word) {
 		g := glyph(r)
-		for i := range lines {
-			lines[i] += g[i] + " "
+		for i := range mask {
+			mask[i] += g[i] + " "
 		}
 	}
-	return lines
+	return shade(mask)
+}
+
+// shade turns a '#' mask into terminal-parrot style art: stroke cells with
+// more filled neighbours get denser characters.
+func shade(mask []string) []string {
+	filled := func(y, x int) bool {
+		return y >= 0 && y < len(mask) && x >= 0 && x < len(mask[y]) && mask[y][x] == '#'
+	}
+	dense := []byte("0OKX")
+
+	out := make([]string, len(mask))
+	for y, row := range mask {
+		line := []byte(row)
+		for x := range line {
+			if !filled(y, x) {
+				continue
+			}
+			n := 0
+			for _, d := range [][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}} {
+				if filled(y+d[0], x+d[1]) {
+					n++
+				}
+			}
+			line[x] = dense[max(n-1, 0)]
+		}
+		out[y] = string(line)
+	}
+	return out
 }
 
 // frame builds one animation step: the whole word sways sideways and bobs.
